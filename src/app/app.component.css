@@ -1,0 +1,26 @@
+.card {
+    font-family: sans-serif;
+    padding: 12px;
+    background: lightcyan;
+    width: 250px;
+    margin-inline: 30px;
+
+    .card-title {
+        color: blue;
+        font-size: 22px;
+    }
+
+}
+
+.row {
+    padding-block: 60px;
+    background-color: lightgrey;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
