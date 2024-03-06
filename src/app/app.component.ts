@@ -22,9 +22,9 @@ export class AppComponent {
     this.items$ = collectionData(aCollection)
     
     // Subscribe to the observable and log the data when it arrives
-    this.items$.subscribe(data => {
-      console.log("FROM FIREBASE DATA:", JSON.stringify(data, null, 2));
-    });
+    // this.items$.subscribe(data => {
+    //   console.log("FROM FIREBASE DATA:", JSON.stringify(data, null, 2));
+    // });
 
   }
    
