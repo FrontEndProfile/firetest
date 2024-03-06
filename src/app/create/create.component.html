@@ -1,0 +1,20 @@
+<h2>CREATE DOCUMENT ON FIRE</h2>
+
+
+<form (ngSubmit)="onSubmit(f)" #f="ngForm" >
+    <label for="card_tittle"></label>
+    <input type="text" name="card_tittle" id="card_tittle" placeholder="Enter the Tittle" ngModel required>
+  
+    <label for="card_info"></label>
+    <input type="text" name="card_info" id="card_info" placeholder="Enter the Info" ngModel required>
+  
+    <label for="card_decs"></label>
+    <input type="text" name="card_decs" id="card_decs" placeholder="Enter the Descriptions" ngModel required>
+
+  
+    <button type="submit">Create Docs</button>
+</form>
+
+<div *ngFor="let card of items$ | async">
+   FORM VALUE IS : {{ card.card_tittle }}
+</div>

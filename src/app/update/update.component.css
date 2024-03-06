@@ -1,0 +1,8 @@
+.modal {
+    display: none; /* Initially hidden */
+    /* Add other styles as needed */
+  }
+  .modal.show {
+    display: block; /* Display when the "show" class is present */
+  }
+  

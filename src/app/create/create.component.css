@@ -1,0 +1,33 @@
+h2 {
+    text-align: center;
+    margin: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-block: 40px;
+}
+
+form {
+    background-color: lightcyan;
+    padding: 40px 20px;
+    max-width: 100%;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    max-width: 50%;
+    margin-bottom: 24px;
+    border: 1px solid black;
+    font-size: 20px;
+    padding: 8px 12px;
+    margin-inline: auto;
+    display: block;
+}
+
+button {
+    display: block;
+    padding: 10px 22px;
+    background: greenyellow;
+    border: 1px solid black;
+    margin-inline: auto;
+    cursor: pointer;
+}
