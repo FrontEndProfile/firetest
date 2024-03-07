@@ -11,7 +11,11 @@
     <label for="card_decs"></label>
     <input type="text" name="card_decs" id="card_decs" placeholder="Enter the Descriptions" ngModel required>
 
-  
+    <label for="card_media"></label>
+    <!-- <input type="text" name="card_media" id="card_media" placeholder="Enter the MEDIA" ngModel required> -->
+    <input type="file" (change)="imagePath($event)" accept=".png,.jpg" id="card_media" name="card_media" ngModel required />
+
+    
     <button type="submit">Create Docs</button>
 </form>
 

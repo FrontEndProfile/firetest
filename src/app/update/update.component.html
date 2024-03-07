@@ -1,6 +1,9 @@
 <div class="list-items" *ngFor="let card of items$ | async">
-    <h4 class="list-title">{{ card.card_tittle }}</h4>
-    <h6 class="list-id">{{ card.id }}</h6>
+    <h4 class="list-title">Tittle this :{{ card.card_tittle }}</h4>
+    <p class="list-id">ID :_____: {{ card.id }}</p>
+    <p class="list-id">INFO :_____: {{ card.card_info }}</p>
+    <p class="list-id">Descriptions :_____: {{ card.card_decs }}</p>
+    <p class="list-id">MEDIA FILE :_____: <a [href]='card.card_media' target="_blank">{{ card.card_media }}</a></p>
   
     <button type="button" (click)="openUpdateModal(card)">Update</button>
     <button type="button" (click)="deleteCard(card.id)">Delete</button>
