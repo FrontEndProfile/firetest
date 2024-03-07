@@ -33,10 +33,10 @@ export class CreateComponent {
   // Observable for Firestore data
   items$: Observable<any[]>;
 
-  selectedFile: File | null = null; // Store the selected file
+  selectedFiles: File[] = [];
 
-  // Flag to track whether a file is selected
-  isFileSelected: boolean = false;
+  fileInputs: { file: File | null, card_type: string }[] = [];
+
 
 
   constructor() {
@@ -45,42 +45,63 @@ export class CreateComponent {
     this.items$ = collectionData(aCollection)
   }
 
-  async uploadMedia(blob: Blob, filePath: string): Promise<string> {
-    const fileRef = ref(this.storageRef, filePath);
+  // async uploadMedia(blob: Blob, filePath: string): Promise<string> {
+  //   const fileRef = ref(this.storageRef, filePath);
   
-    try {
-      const uploadTask = await uploadBytes(fileRef, blob);
-      const downloadURL = await getDownloadURL(uploadTask.ref);
-      console.log("File uploaded successfully. URL:", downloadURL);
-      return downloadURL;
-    } catch (error) {
-      console.error("Error uploading file:", error.message);
-      throw error; // Rethrow the error to handle it in the calling function
+  //   try {
+  //     const uploadTask = await uploadBytes(fileRef, blob);
+  //     const downloadURL = await getDownloadURL(uploadTask.ref);
+  //     console.log("File uploaded successfully. URL:", downloadURL);
+  //     return downloadURL;
+  //   } catch (error) {
+  //     console.error("Error uploading file:", error.message);
+  //     throw error; // Rethrow the error to handle it in the calling function
+  //   }
+  // }
+
+
+  async uploadMedia(files: File[], basePath: string): Promise<string[]> {
+    const downloadURLs: string[] = [];
+  
+    for (const file of files) {
+      const filePath = this.generateUniquePath(file.name);
+      const fileRef = ref(this.storageRef, `${basePath}/${filePath}`);
+  
+      try {
+        const uploadTask = await uploadBytes(fileRef, file);
+        const downloadURL = await getDownloadURL(uploadTask.ref);
+        console.log(`File ${file.name} uploaded successfully. URL: ${downloadURL}`);
+        downloadURLs.push(downloadURL);
+      } catch (error) {
+        console.error(`Error uploading file ${file.name}:`, error.message);
+        throw error; // Rethrow the error to handle it in the calling function
+      }
     }
+  
+    return downloadURLs;
   }
   
+  
+
+  addFileInput(): void {
+    this.fileInputs.push({ file: null, card_type: '' });
+  }
 
 
   // Function to handle local file path
-  imagePath(event: any): void {
+  // imagePath(event: any): void {
+  //   this.selectedFiles = event.target.files[0];
+  // }
+  imagePath(event: any, index: number): void {
     const fileInput = event.target;
     const files = fileInput.files;
 
     if (files && files.length > 0) {
-      // this.isFileSelected = true;
-      const selectedFile = files[0];
-      console.log("THIS IS LOCAL PATHS :", selectedFile);
-
-      // Update selectedFile here
-      this.selectedFile = selectedFile;
-      
-      // Continue with other operations if needed
-      const filePath = this.generateUniquePath(selectedFile.name);
-      this.uploadMedia(selectedFile, filePath);
-
+      this.fileInputs[index].file = files[0];
     }
-
   }
+
+
 
   // Function to generate a unique path in Firebase storage
   generateUniquePath(fileName: string): string {
@@ -95,7 +116,8 @@ export class CreateComponent {
         card_tittle: form.value.card_tittle,
         card_info: form.value.card_info,
         card_decs: form.value.card_decs,
-        card_media: ''
+        card_media: [], // Initialize as an empty array
+
       };
   
       const aCollection = collection(this.firestore, 'model');
@@ -105,22 +127,49 @@ export class CreateComponent {
         const docRef = await addDoc(aCollection, newCard);
         console.log("Document successfully written with id:", docRef.id);
   
-        // Check if selectedFile is not null before accessing its properties
-        if (this.selectedFile) {
-          const filePath = this.generateUniquePath(this.selectedFile.name);
-          const downloadURL = await this.uploadMedia(this.selectedFile, filePath);
 
-          // Update the newCard object with the media URL
-          newCard.card_media = downloadURL;
-
-          // Update the Firestore document with the media URL
-          await setDoc(doc(aCollection, docRef.id), newCard, { merge: true });
-
-          // Log the newly created card data with media URL
-          console.log("New Card Data:", newCard);
+        // Check if selectedFiles is not null before accessing its properties
+        if (this.fileInputs.length > 0) {
+          const basePath = '/product'; // Adjust this according to your folder structure
+          const downloadURLs = await this.uploadMedia(this.fileInputs.map(input => input.file), basePath);
+        
+          // Loop through fileInputs and update newCard with media URLs and types
+          for (let i = 0; i < this.fileInputs.length; i++) {
+            const currentFileInput = this.fileInputs[i];
+            const downloadURL = downloadURLs[i];
+        
+            // Update the newCard object with the media URL and type
+            newCard.card_media.push({ card_type: currentFileInput.card_type, card_media_url: downloadURL });
+          }
         } else {
-          console.error("Selected file is null");
+          console.error('File inputs array is empty');
         }
+
+      // Update the Firestore document with the media URLs
+      await setDoc(doc(aCollection, docRef.id), newCard, { merge: true });
+
+
+
+
+
+
+
+        // Check if selectedFile is not null before accessing its properties
+        // if (this.selectedFile) {
+        //   const filePath = this.generateUniquePath(this.selectedFile.name);
+        //   const downloadURL = await this.uploadMedia(this.selectedFile, filePath);
+
+        //   // Update the newCard object with the media URL
+        //   newCard.card_media = downloadURL;
+
+        //   // Update the Firestore document with the media URL
+        //   await setDoc(doc(aCollection, docRef.id), newCard, { merge: true });
+
+        //   // Log the newly created card data with media URL
+        //   console.log("New Card Data:", newCard);
+        // } else {
+        //   console.error("Selected file is null");
+        // }
   
       } catch (error) {
         console.error("Error writing document: ", error);
@@ -128,8 +177,6 @@ export class CreateComponent {
   
       // Optionally, you can reset the form after submission
       form.reset();
-      // Reset the flag after form submission
-      // this.isFileSelected = false;
 
     }
   }

@@ -1,7 +1,7 @@
 <h2>CREATE DOCUMENT ON FIRE</h2>
 
 
-<form (ngSubmit)="onSubmit(f)" #f="ngForm" >
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
     <label for="card_tittle"></label>
     <input type="text" name="card_tittle" id="card_tittle" placeholder="Enter the Tittle" ngModel required>
   
@@ -11,11 +11,15 @@
     <label for="card_decs"></label>
     <input type="text" name="card_decs" id="card_decs" placeholder="Enter the Descriptions" ngModel required>
 
-    <label for="card_media"></label>
-    <!-- <input type="text" name="card_media" id="card_media" placeholder="Enter the MEDIA" ngModel required> -->
-    <input type="file" (change)="imagePath($event)" accept=".png,.jpg" id="card_media" name="card_media" ngModel required />
-
+    <div *ngFor="let fileInput of fileInputs; let i = index">
+        <input type="file" (change)="imagePath($event, i)" accept="image/*" [name]="'fileInput_' + i">
+        <input type="text" [(ngModel)]="fileInputs[i].card_type" [name]="'cardType_' + i" placeholder="Card Type">
+    </div>
     
+      <button type="button" (click)="addFileInput()">Add File Input</button>
+      
+    <br>
+    <br>
     <button type="submit">Create Docs</button>
 </form>
 

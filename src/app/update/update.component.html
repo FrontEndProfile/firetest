@@ -1,31 +1,51 @@
 <div class="list-items" *ngFor="let card of items$ | async">
-    <h4 class="list-title">Tittle this :{{ card.card_tittle }}</h4>
-    <p class="list-id">ID :_____: {{ card.id }}</p>
-    <p class="list-id">INFO :_____: {{ card.card_info }}</p>
-    <p class="list-id">Descriptions :_____: {{ card.card_decs }}</p>
-    <p class="list-id">MEDIA FILE :_____: <a [href]='card.card_media' target="_blank">{{ card.card_media }}</a></p>
-  
-    <button type="button" (click)="openUpdateModal(card)">Update</button>
-    <button type="button" (click)="deleteCard(card.id)">Delete</button>
+  <h4 class="list-title">Tittle this :{{ card.card_tittle }}</h4>
+  <p class="list-id">ID :_____: {{ card.id }}</p>
+  <p class="list-id">INFO :_____: {{ card.card_info }}</p>
+  <p class="list-id">Descriptions :_____: {{ card.card_decs }}</p>
+
+  <!-- Display and update each media file -->
+  <div *ngFor="let media of card.card_media; let i = index">
+    <div class="media-item">
+      <label for="mediaType{{i}}">Media Type:</label>
+      <span>{{ media.card_type }}</span>
+    </div>
+    <div class="media-item">
+      <label for="mediaUrl{{i}}">Media URL:</label>
+      <a [href]="media.card_media_url" target="_blank">{{ media.card_media_url }}</a>
+    </div>
+  </div>
+
+  <button type="button" (click)="openUpdateModal(card)">Update</button>
+  <button type="button" (click)="deleteCard(card.id)">Delete</button>
 
 
 
 </div>
-  
-  <!-- Update Modal -->
-  <div class="modal" *ngIf="true">
-    <form (ngSubmit)="updateCard()" #updateForm="ngForm">
-      <label for="card_tittle">Update Tittle</label>
-      <input type="text" name="card_tittle" id="card_tittle" [(ngModel)]="selectedCard.card_tittle" required>
-  
-      <label for="card_info">Update Info</label>
-      <input type="text" name="card_info" id="card_info" [(ngModel)]="selectedCard.card_info" required>
-  
-      <label for="card_decs">Update Descriptions</label>
-      <input type="text" name="card_decs" id="card_decs" [(ngModel)]="selectedCard.card_decs" required>
-  
-      <button type="submit">Update Doc</button>
-      <button type="button" (click)="closeModal()">Close</button>
-    </form>
-  </div>
-  
+
+<!-- Update Modal -->
+<div class="modal" *ngIf="true">
+  <form (ngSubmit)="updateCard()" #updateForm="ngForm">
+    <label for="card_tittle">Update Tittle</label>
+    <input type="text" name="card_tittle" id="card_tittle" [(ngModel)]="selectedCard.card_tittle" required>
+
+    <label for="card_info">Update Info</label>
+    <input type="text" name="card_info" id="card_info" [(ngModel)]="selectedCard.card_info" required>
+
+    <label for="card_decs">Update Descriptions</label>
+    <input type="text" name="card_decs" id="card_decs" [(ngModel)]="selectedCard.card_decs" required>
+
+    <div *ngFor="let media of selectedCard.card_media; let i = index">
+      <label for="mediaType{{i}}">Update Media Type</label>
+      <input type="text" name="mediaType{{i}}" id="mediaType{{i}}"
+        [(ngModel)]="selectedCard.card_media[i] && selectedCard.card_media[i].card_type" required>
+
+      <label for="mediaUrl{{i}}">Update Media URL</label>
+      <input type="file" name="mediaUrl{{i}}" id="mediaUrl{{i}}" (change)="imagePath($event, i)" required>
+    </div>
+
+
+    <button type="submit">Update Doc</button>
+    <button type="button" (click)="closeModal()">Close</button>
+  </form>
+</div>
