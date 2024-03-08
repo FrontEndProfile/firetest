@@ -130,7 +130,7 @@ export class CreateComponent {
 
         // Check if selectedFiles is not null before accessing its properties
         if (this.fileInputs.length > 0) {
-          const basePath = '/product'; // Adjust this according to your folder structure
+          const basePath = '/'; // Adjust this according to your folder structure
           const downloadURLs = await this.uploadMedia(this.fileInputs.map(input => input.file), basePath);
         
           // Loop through fileInputs and update newCard with media URLs and types

@@ -5,14 +5,14 @@
   <p class="list-id">Descriptions :_____: {{ card.card_decs }}</p>
 
   <!-- Display and update each media file -->
-  <div *ngFor="let media of card.card_media; let i = index">
+  <div *ngFor="let media of card.card_media; let i = index" class="main-media-loop">
     <div class="media-item">
-      <label for="mediaType{{i}}">Media Type:</label>
-      <span>{{ media.card_type }}</span>
+      <label for="mediaType{{i}}">Type: - </label>
+      <span> - {{ media.card_type }}</span>
     </div>
     <div class="media-item">
-      <label for="mediaUrl{{i}}">Media URL:</label>
-      <a [href]="media.card_media_url" target="_blank">{{ media.card_media_url }}</a>
+      <label for="mediaUrl{{i}}"></label>
+      <a [href]="media.card_media_url" target="_blank"><img [src]="media.card_media_url" width="100" alt=""></a>
     </div>
   </div>
 
