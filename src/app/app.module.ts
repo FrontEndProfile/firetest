@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
+
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,6 +12,9 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { CreateComponent } from './create/create.component';
 import { UpdateComponent } from './update/update.component';
+
+
+
 
 
 
@@ -26,9 +31,12 @@ import { UpdateComponent } from './update/update.component';
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
     FormsModule,
+    QuillModule.forRoot(),
+
+
   ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(),
   ],
   bootstrap: [AppComponent]
   

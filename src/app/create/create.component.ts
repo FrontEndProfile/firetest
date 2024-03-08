@@ -6,10 +6,10 @@ import { Firestore, collection, collectionData, addDoc, setDoc, doc } from '@ang
 import { getDownloadURL, getStorage, ref, Storage, uploadBytes } from '@angular/fire/storage';
 
 
+import { Quill } from 'quill';
 
 
-
-import { Observable, from } from 'rxjs';
+import { Observable, } from 'rxjs';
 import { Card } from '../card.model';
 
 
@@ -37,6 +37,41 @@ export class CreateComponent {
 
   fileInputs: { file: File | null, card_type: string }[] = [];
 
+
+    // Variable to store rich text content
+    richTextContent: string = '';
+  // You can customize Quill options if needed
+
+
+    // Optional: Access Quill instance
+    quill: Quill | undefined;
+    formGroup: any;
+
+
+    onRichTextChange(content: string): void {
+      this.richTextContent = content;
+    }
+
+
+
+
+
+
+      // Initialize properties for specific media types
+  newCard: Card = {
+    product_name_card: '',
+    product_name: '',
+    product_description_editor: '',
+    product_detail_editor: '',
+    product_info_editor: '',
+    product_scenarios_editor: '',
+    product_media_base: [{ product_type: '', product_media_url: '', media_alt: '' }],
+    product_media_one: [{ product_type: '', product_media_url: '', media_alt: '' }],
+    product_media_two: [{ product_type: '', product_media_url: '', media_alt: '' }],
+    product_media_three: [{ product_type: '', product_media_url: '', media_alt: '' }],
+    product_media_four: [{ product_type: '', product_media_url: '', media_alt: '' }],
+    product_media_fluid_banner: [{ product_type: '', product_media_url: '', media_alt: '' }],
+  };
 
 
   constructor() {
@@ -92,13 +127,13 @@ export class CreateComponent {
   // imagePath(event: any): void {
   //   this.selectedFiles = event.target.files[0];
   // }
-  imagePath(event: any, index: number): void {
+  imagePath(event: any, name: string): void {
     const fileInput = event.target;
     const files = fileInput.files;
 
-    if (files && files.length > 0) {
-      this.fileInputs[index].file = files[0];
-    }
+    // if (files && files.length > 0) {
+    //   this.fileInputs[index].file = files[0];
+    // }
   }
 
 
@@ -112,41 +147,59 @@ export class CreateComponent {
 
   async onSubmit(form: NgForm): Promise<void> {
     if (form.valid) {
-      const newCard: Card = {
-        card_tittle: form.value.card_tittle,
-        card_info: form.value.card_info,
-        card_decs: form.value.card_decs,
-        card_media: [], // Initialize as an empty array
+      // const newCard: Card = {
+        this.newCard.product_name_card = form.value.product_name_card,
+        this.newCard.product_name = form.value.product_name,
+        this.newCard.product_description_editor = form.value.product_description_editor,
+        this.newCard.product_detail_editor = form.value.product_detail_editor,
+        this.newCard.product_info_editor = form.value.product_info_editor,
+        this.newCard.product_scenarios_editor = form.value.product_scenarios_editor,
 
-      };
+
+        
+        this.newCard.product_media_base = [];
+        this.newCard.product_media_one = [];
+        this.newCard.product_media_two = [];
+        this.newCard.product_media_three = [];
+        this.newCard.product_media_four = [];
+        this.newCard.product_media_fluid_banner = [];
+
+
+      // };
   
+      // Set rich text content in newCard
+      // newCard.rich_text_content = this.richTextContent;
+
       const aCollection = collection(this.firestore, 'model');
+
+
+
       
       try {
         // Wait for setDoc to complete and log the id
-        const docRef = await addDoc(aCollection, newCard);
+        const docRef = await addDoc(aCollection, this.newCard);
         console.log("Document successfully written with id:", docRef.id);
   
 
         // Check if selectedFiles is not null before accessing its properties
-        if (this.fileInputs.length > 0) {
-          const basePath = '/'; // Adjust this according to your folder structure
-          const downloadURLs = await this.uploadMedia(this.fileInputs.map(input => input.file), basePath);
+        // if (this.fileInputs.length > 0) {
+        //   const basePath = '/'; // Adjust this according to your folder structure
+        //   const downloadURLs = await this.uploadMedia(this.fileInputs.map(input => input.file), basePath);
         
-          // Loop through fileInputs and update newCard with media URLs and types
-          for (let i = 0; i < this.fileInputs.length; i++) {
-            const currentFileInput = this.fileInputs[i];
-            const downloadURL = downloadURLs[i];
+        //   // Loop through fileInputs and update newCard with media URLs and types
+        //   for (let i = 0; i < this.fileInputs.length; i++) {
+        //     const currentFileInput = this.fileInputs[i];
+        //     const downloadURL = downloadURLs[i];
         
-            // Update the newCard object with the media URL and type
-            newCard.card_media.push({ card_type: currentFileInput.card_type, card_media_url: downloadURL });
-          }
-        } else {
-          console.error('File inputs array is empty');
-        }
+        //     // Update the newCard object with the media URL and type
+        //     newCard.card_media.push({ card_type: currentFileInput.card_type, card_media_url: downloadURL });
+        //   }
+        // } else {
+        //   console.error('File inputs array is empty');
+        // }
 
       // Update the Firestore document with the media URLs
-      await setDoc(doc(aCollection, docRef.id), newCard, { merge: true });
+      await setDoc(doc(aCollection, docRef.id), this.newCard, { merge: true });
 
 
 
@@ -177,6 +230,9 @@ export class CreateComponent {
   
       // Optionally, you can reset the form after submission
       form.reset();
+
+      this.richTextContent = ''; // Reset rich text content after submission
+
 
     }
   }

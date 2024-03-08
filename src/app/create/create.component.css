@@ -31,3 +31,11 @@ button {
     margin-inline: auto;
     cursor: pointer;
 }
+
+
+
+
+quill-editor {
+    display: block;
+    width: 100%;
+}

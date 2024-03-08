@@ -3,6 +3,12 @@
   <p class="list-id">ID :_____: {{ card.id }}</p>
   <p class="list-id">INFO :_____: {{ card.card_info }}</p>
   <p class="list-id">Descriptions :_____: {{ card.card_decs }}</p>
+  <br>
+  <p class="list-id">Descriptions :_____: <span [innerHTML]="card.rich_text_content"></span></p>
+
+
+
+  
 
   <!-- Display and update each media file -->
   <div *ngFor="let media of card.card_media; let i = index" class="main-media-loop">

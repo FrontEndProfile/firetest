@@ -2,27 +2,82 @@
 
 
 <form #form="ngForm" (ngSubmit)="onSubmit(form)">
-    <label for="card_tittle"></label>
-    <input type="text" name="card_tittle" id="card_tittle" placeholder="Enter the Tittle" ngModel required>
-  
-    <label for="card_info"></label>
-    <input type="text" name="card_info" id="card_info" placeholder="Enter the Info" ngModel required>
-  
-    <label for="card_decs"></label>
-    <input type="text" name="card_decs" id="card_decs" placeholder="Enter the Descriptions" ngModel required>
 
-    <div *ngFor="let fileInput of fileInputs; let i = index">
-        <input type="file" (change)="imagePath($event, i)" accept="image/*" [name]="'fileInput_' + i">
-        <input type="text" [(ngModel)]="fileInputs[i].card_type" [name]="'cardType_' + i" placeholder="Card Type">
-    </div>
-    
-      <button type="button" (click)="addFileInput()">Add File Input</button>
-      
-    <br>
-    <br>
-    <button type="submit">Create Docs</button>
+
+  <label for="product_name"></label>
+  <input type="text" name="product_name" id="product_name" placeholder="Enter the product_name" ngModel required>
+
+  <label for="product_name_card"></label>
+  <input type="text" name="product_name_card" id="product_name_card" placeholder="Enter the product_name_card" ngModel required>
+
+  <label for="product_description_editor">product_description_editor</label>
+  <br>
+  <quill-editor [(ngModel)]="newCard.product_description_editor" [ngModelOptions]="{ standalone: true }"></quill-editor>
+
+  <label for="product_detail_editor">product_detail_editor</label>
+  <br>
+  <quill-editor [(ngModel)]="newCard.product_detail_editor" [ngModelOptions]="{ standalone: true }"></quill-editor>
+
+  <label for="product_info_editor">product_info_editor</label>
+  <br>
+  <quill-editor [(ngModel)]="newCard.product_info_editor" [ngModelOptions]="{ standalone: true }"></quill-editor>
+
+  <label for="product_scenarios_editor">product_scenarios_editor</label>
+  <br>
+  <quill-editor [(ngModel)]="newCard.product_scenarios_editor" [ngModelOptions]="{ standalone: true }"></quill-editor>
+
+
+
+
+<!-- Fixed number of file inputs for specific media types -->
+<!-- <label for="base_media"></label>
+<input type="file" (change)="imagePath($event, 'base_media')" accept="image/*" name="base_media">
+<label for="base_media_type"></label>
+<input type="text" [(ngModel)]="newCard.product_media_base[0].product_type" name="base_media_type" placeholder="Base Media Type">
+
+<label for="one_media"></label>
+<input type="file" (change)="imagePath($event, 'one_media')" accept="image/*" name="one_media">
+<label for="one_media_type"></label>
+<input type="text" [(ngModel)]="newCard.product_media_one[0].product_type" name="one_media_type" placeholder="One Media Type">
+
+<label for="two_media"></label>
+<input type="file" (change)="imagePath($event, 'two_media')" accept="image/*" name="two_media">
+<label for="two_media_type"></label>
+<input type="text" [(ngModel)]="newCard.product_media_one[0].product_type" name="two_media_type" placeholder="One Media Type">
+
+
+<label for="three_media"></label>
+<input type="file" (change)="imagePath($event, 'three_media')" accept="image/*" name="three_media">
+<label for="three_media_type"></label>
+<input type="text" [(ngModel)]="newCard.product_media_one[0].product_type" name="three_media_type" placeholder="One Media Type"> -->
+
+
+
+
+
+
+  <!-- your-component.component.html -->
+  <!-- <quill-editor [(ngModel)]="richTextContent" (contentChange)="onRichTextChange($event)"
+    [ngModelOptions]="{ standalone: true }"></quill-editor> -->
+
+
+
+
+
+
+
+  <div *ngFor="let fileInput of fileInputs; let i = index">
+    <input type="file" (change)="imagePath($event, i)" accept="image/*" [name]="'fileInput_' + i">
+    <input type="text" [(ngModel)]="fileInputs[i].card_type" [name]="'cardType_' + i" placeholder="Card Type">
+  </div>
+
+  <button type="button" (click)="addFileInput()">Add File Input</button>
+
+  <br>
+  <br>
+  <button type="submit">Create Docs</button>
 </form>
 
 <div *ngFor="let card of items$ | async">
-   FORM VALUE IS : {{ card.card_tittle }}
+  FORM VALUE IS : {{ card.card_tittle }}
 </div>
